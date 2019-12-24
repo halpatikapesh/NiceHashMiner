@@ -146,6 +146,14 @@ namespace NHM.Wpf.ViewModels
 
         // TODO these versions here will not work
         public string LocalVersion => VersionState.Instance.ProgramVersion.ToString();
+
+        private void RefreshVersion_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            lock (_lock)
+            {
+                OnPropertyChanged(OnlineVersion);
+            }
+        }
         public string OnlineVersion => VersionState.Instance.OnlineVersion?.ToString() ?? "N/A";
 
         #region Currency-related properties
@@ -353,6 +361,7 @@ namespace NHM.Wpf.ViewModels
             //MinerPluginsManager.OnCrossReferenceInstalledWithOnlinePlugins += OnCrossReferenceInstalledWithOnlinePlugins;
             MinerPluginsManagerState.Instance.PropertyChanged += MinerPluginsManagerState_PropertyChanged;
             NotificationsManager.Instance.PropertyChanged += RefreshNotifications_PropertyChanged;
+            VersionState.Instance.PropertyChanged += RefreshVersion_PropertyChanged;
         }
 
         // TODO I don't like this way, a global refresh and notify would be better
